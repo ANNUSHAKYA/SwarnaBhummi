@@ -1,0 +1,102 @@
+@import "tailwindcss";
+
+@theme {
+  --color-forest: #263D2C;
+  --color-forest-dark: #192A1E;
+  --color-forest-light: #34503B;
+  --color-forest-surface: #2D4734;
+
+  --color-ivory: #F7F0E4;
+  --color-ivory-light: #FCFAF6;
+  --color-ivory-dark: #EADBCA;
+  --color-ivory-warm: #F2E7D5;
+
+  --color-gold: #C9A96E;
+  --color-gold-light: #DFCA9E;
+  --color-gold-dark: #A98748;
+  --color-gold-muted: #B89B64;
+
+  --color-rose: #B87879;
+  --color-rose-light: #CD9596;
+  --color-rose-dark: #9A5B5C;
+
+  --color-sage: #87977C;
+  --color-sage-light: #A5B39B;
+  --color-sage-dark: #6C7D61;
+  --color-sage-surface: #F0F3ED;
+
+  --color-dark-text: #252720;
+  --color-dark-muted: #575A51;
+
+  --font-serif: var(--font-serif), Georgia, serif;
+  --font-sans: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Base custom properties */
+:root {
+  --forest: #263D2C;
+  --ivory: #F7F0E4;
+  --gold: #C9A96E;
+  --rose: #B87879;
+  --sage: #87977C;
+  --dark-text: #252720;
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #F7F0E4;
+}
+::-webkit-scrollbar-thumb {
+  background: #C9A96E;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #B38F52;
+}
+
+/* Indian Heritage Floral & Geometric Borders */
+.border-heritage-gold {
+  border-color: rgba(201, 169, 110, 0.35);
+}
+
+.gold-gradient-text {
+  background: linear-gradient(135deg, #DFC99E 0%, #C9A96E 50%, #B38F52 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-glow {
+  box-shadow: 0 0 25px rgba(201, 169, 110, 0.28);
+}
+
+.card-luxury-hover {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.card-luxury-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px -10px rgba(38, 61, 44, 0.15);
+}
+
+/* 3D Canvas wrapper */
+.canvas-container {
+  touch-action: pan-y pinch-zoom;
+}
+
+/* Festive fairy light animations */
+@keyframes fairyPulse {
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.92); }
+}
+
+.animate-fairy {
+  animation: fairyPulse 3s ease-in-out infinite;
+}
