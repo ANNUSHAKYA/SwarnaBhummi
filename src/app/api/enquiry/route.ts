@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { VENUE_INFO } from "@/data/venueData";
+import { VENUE_CONFIG } from "@/config/venue";
 
 export async function POST(request: Request) {
   try {
@@ -28,82 +28,20 @@ export async function POST(request: Request) {
       );
     }
 
-    const enquiryId = `SB-${Date.now().toString(36).toUpperCase()}`;
-    const timestamp = new Date().toISOString();
-
-    const enquiryData = {
-      enquiryId,
-      timestamp,
-      name: name.trim(),
-      phone: phone.trim(),
-      eventType,
-      eventDate: eventDate || "Flexible / Not finalized",
-      guestCount: guestCount || "Not specified",
-      facilities: Array.isArray(facilities) ? facilities : [],
-      specificZone: specificZone || "Entire Venue",
-      message: message ? message.trim() : "",
-    };
-
-    console.log("=== NEW VENUE ENQUIRY RECEIVED ===", enquiryData);
-
-    // Server-side email delivery if RESEND_API_KEY is configured
-    const resendApiKey = process.env.RESEND_API_KEY;
-    let emailStatus = "unconfigured_dev_mode";
-
-    if (resendApiKey) {
-      try {
-        const response = await fetch("https://api.resend.com/emails", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${resendApiKey}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            from: "Swarna Bhummi Enquiries <enquiries@swarnabhummi.in>",
-            to: [VENUE_INFO.businessEmail],
-            subject: `New Wedding Enquiry [${enquiryId}]: ${enquiryData.name} (${enquiryData.eventType})`,
-            html: `
-              <h2>New Wedding & Celebration Enquiry</h2>
-              <p><strong>Reference:</strong> ${enquiryId}</p>
-              <p><strong>Name:</strong> ${enquiryData.name}</p>
-              <p><strong>Phone:</strong> ${enquiryData.phone}</p>
-              <p><strong>Event:</strong> ${enquiryData.eventType}</p>
-              <p><strong>Preferred Date:</strong> ${enquiryData.eventDate}</p>
-              <p><strong>Expected Guests:</strong> ${enquiryData.guestCount}</p>
-              <p><strong>Facilities:</strong> ${enquiryData.facilities.join(", ") || "General"}</p>
-              <p><strong>Specific Zone:</strong> ${enquiryData.specificZone}</p>
-              <p><strong>Message:</strong> ${enquiryData.message || "None"}</p>
-            `,
-          }),
-        });
-
-        if (response.ok) {
-          emailStatus = "sent_via_resend";
-        } else {
-          console.error("Resend API error response:", await response.text());
-          emailStatus = "resend_error_fallback";
-        }
-      } catch (emailErr) {
-        console.error("Email sending failure:", emailErr);
-        emailStatus = "resend_exception_fallback";
-      }
-    }
+    // In demo mode: Do NOT send emails to external services or persist personal data to DB
+    const enquiryId = `DEMO-${Date.now().toString(36).toUpperCase()}`;
 
     return NextResponse.json({
       success: true,
       enquiryId,
-      emailStatus,
-      message:
-        emailStatus === "sent_via_resend"
-          ? "Thank you! Your enquiry has been forwarded directly to the venue managers."
-          : "Thank you! Your enquiry details have been recorded. You can also connect directly via WhatsApp.",
-      data: enquiryData,
+      demoMode: true,
+      message: VENUE_CONFIG.enquirySuccessNotice,
     });
   } catch (err: unknown) {
     const errorMsg = err instanceof Error ? err.message : "Server error";
-    console.error("Enquiry API exception:", errorMsg);
+    console.error("Demo Enquiry API exception:", errorMsg);
     return NextResponse.json(
-      { success: false, error: "An unexpected error occurred while processing your enquiry." },
+      { success: false, error: "An unexpected error occurred while processing your demo enquiry." },
       { status: 500 }
     );
   }

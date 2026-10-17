@@ -22,7 +22,7 @@ export default function HeroSection() {
     <>
       <section
         id="top"
-        className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-[#18261C] pt-20 pb-12"
+        className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-[#18261C] pt-28 sm:pt-32 pb-12"
       >
         {/* Cinematic Background Video / Image Layer */}
         <div className="absolute inset-0 z-0">

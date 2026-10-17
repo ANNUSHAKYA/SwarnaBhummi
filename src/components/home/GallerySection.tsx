@@ -147,6 +147,17 @@ export default function GallerySection() {
 
                 {/* Bottom Caption */}
                 <div className="absolute bottom-4 left-4 right-4 text-white">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span
+                      className={`text-[10px] uppercase font-semibold tracking-wider px-2 py-0.5 rounded-full ${
+                        item.isVerified
+                          ? "bg-emerald-950/80 text-emerald-300 border border-emerald-500/40"
+                          : "bg-[#263D2C]/90 text-[#C9A96E] border border-[#C9A96E]/40"
+                      }`}
+                    >
+                      {item.isVerified ? "On-site Footage" : "Visual inspiration"}
+                    </span>
+                  </div>
                   <h4 className="font-serif font-bold text-base sm:text-lg text-[#F7F0E4] leading-tight">
                     {item.title}
                   </h4>
@@ -232,9 +243,19 @@ export default function GallerySection() {
                     {activeLightboxItem.caption}
                   </p>
                 </div>
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-950 text-emerald-300 border border-emerald-500/30 shrink-0">
+                <span
+                  className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold shrink-0 ${
+                    activeLightboxItem.isVerified
+                      ? "bg-emerald-950 text-emerald-300 border border-emerald-500/30"
+                      : "bg-[#263D2C] text-[#C9A96E] border border-[#C9A96E]/40"
+                  }`}
+                >
                   <CheckCircle2 className="w-3.5 h-3.5" />
-                  <span>Real Venue Photo</span>
+                  <span>
+                    {activeLightboxItem.isVerified
+                      ? "On-Site Video Capture"
+                      : "Visual Inspiration"}
+                  </span>
                 </span>
               </div>
             </div>

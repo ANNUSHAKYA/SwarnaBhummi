@@ -3,22 +3,21 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import confetti from "canvas-confetti";
-import { VENUE_INFO } from "@/data/venueData";
-import { generateWhatsAppLink } from "@/utils/whatsapp";
+import { VENUE_CONFIG } from "@/config/venue";
+import { useDemoModal } from "@/components/ui/DemoNoticeModal";
 import {
   Calendar,
   Phone,
   User,
   Users,
-  MessageSquare,
   Building,
   CheckCircle2,
-  AlertCircle,
   MessageCircle,
   Send,
   Sparkles,
+  Info,
   ShieldCheck,
-  ArrowRight,
+  RotateCcw,
 } from "lucide-react";
 
 interface EnquiryFormData {
@@ -45,14 +44,12 @@ export default function EnquirySection({
 }: EnquirySectionProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionSuccess, setSubmissionSuccess] = useState<boolean>(false);
-  const [enquiryId, setEnquiryId] = useState<string>("");
-  const [lastPayload, setLastPayload] = useState<EnquiryFormData | null>(null);
+  const { openDemoModal } = useDemoModal();
 
   const {
     register,
     handleSubmit,
     setValue,
-    watch,
     reset,
     formState: { errors },
   } = useForm<EnquiryFormData>({
@@ -68,7 +65,7 @@ export default function EnquirySection({
     },
   });
 
-  // Watch for external selections
+  // Watch for external selections from 3D model or facilities
   useEffect(() => {
     if (initialFacility) {
       setValue("specificZone", initialFacility);
@@ -93,230 +90,189 @@ export default function EnquirySection({
     "9 Luxury VIP AC Rooms",
     "Dual Celebration Stages",
     "180 Ft. Decorated Walkway",
-    "20,000 Sq. Ft. Parking Grounds",
+    "20,000 Sq. Ft. Dedicated Parking",
     "Covered Dining Pavilion",
   ];
 
-  const onSubmit = async (data: EnquiryFormData) => {
+  // In demo mode: Validate realistic interactions, but DO NOT submit personal info to external service or DB
+  const onSubmit = async (_data: EnquiryFormData) => {
     setIsSubmitting(true);
+    // Simulate brief realistic processing delay
+    await new Promise((resolve) => setTimeout(resolve, 600));
+
+    setIsSubmitting(false);
+    setSubmissionSuccess(true);
+
+    // Festive confetti animation
     try {
-      const response = await fetch("/api/enquiry", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+      confetti({
+        particleCount: 70,
+        spread: 60,
+        origin: { y: 0.6 },
+        colors: ["#C9A96E", "#263D2C", "#EADBCA", "#87977C"],
       });
-
-      const resData = await response.json();
-
-      if (resData.success) {
-        setEnquiryId(resData.enquiryId || `SB-${Date.now().toString(36).toUpperCase()}`);
-        setLastPayload(data);
-        setSubmissionSuccess(true);
-
-        // Confetti celebration
-        try {
-          confetti({
-            particleCount: 80,
-            spread: 70,
-            origin: { y: 0.6 },
-            colors: ["#C9A96E", "#263D2C", "#EADBCA", "#87977C"],
-          });
-        } catch {
-          // ignore in environments without canvas
-        }
-      } else {
-        alert(resData.error || "Please check your inputs and try again.");
-      }
-    } catch (err) {
-      console.error("Enquiry submission error:", err);
-      // Fallback
-      setEnquiryId(`SB-${Date.now().toString(36).toUpperCase()}`);
-      setLastPayload(data);
-      setSubmissionSuccess(true);
-    } finally {
-      setIsSubmitting(false);
+    } catch {
+      // ignore in environments without canvas
     }
   };
 
-  const handleWhatsAppRedirect = () => {
-    if (!lastPayload) return;
-    const url = generateWhatsAppLink({
-      name: lastPayload.name,
-      phone: lastPayload.phone,
-      eventType: lastPayload.eventType,
-      eventDate: lastPayload.eventDate,
-      guestCount: lastPayload.guestCount,
-      facilities: lastPayload.facilities,
-      specificZone: lastPayload.specificZone,
-      message: lastPayload.message,
-    });
-    window.open(url, "_blank");
-  };
-
   return (
-    <section id="enquiry-section" className="w-full bg-[#1C2C20] text-[#F7F0E4] py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <section
+      id="enquiry-section"
+      className="w-full bg-[#1C2C20] text-[#F7F0E4] py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden"
+    >
       {/* Decorative Radial Glow */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#C9A96E]/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-6xl mx-auto">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <div className="text-center max-w-3xl mx-auto mb-14">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#C9A96E]/15 border border-[#C9A96E]/30 text-[#C9A96E] text-xs uppercase tracking-widest font-semibold mb-3">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Plan Your Wedding</span>
+            <span>{VENUE_CONFIG.enquiryFormLabel}</span>
           </div>
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-[#F7F0E4] tracking-tight">
-            Reserve Your Auspicious Dates
+            Plan Your Auspicious Celebration
           </h2>
           <p className="mt-3 text-sm sm:text-base text-[#F7F0E4]/80 leading-relaxed">
-            Connect directly with the management of Swarna Bhummi. Schedule a personalized venue visit and receive tailored package options for your celebration in Jaunpur.
+            Test the prospective wedding enquiry experience designed for Swarna Bhummi. This sample form illustrates how clients will select event dates, guest capacities, and venue spaces.
           </p>
         </div>
 
         {/* Content Box */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Left Column: Direct Contact & Venue Assurances */}
+          {/* Left Column: Direct Contact Placeholders & Integration Notice */}
           <div className="lg:col-span-5 space-y-6">
             <div className="p-8 rounded-3xl bg-[#263D2C] border border-[#C9A96E]/30 shadow-xl space-y-6">
               <div>
                 <span className="text-xs uppercase font-semibold tracking-wider text-[#C9A96E]">
-                  Official Contact Details
+                  Concept Demonstration
                 </span>
                 <h3 className="font-serif text-2xl font-bold text-[#F7F0E4] mt-1">
-                  Connect with Our Venue Team
+                  Connect with Venue Team
                 </h3>
                 <p className="text-xs sm:text-sm text-[#F7F0E4]/75 mt-2 leading-relaxed">
-                  Call directly or send an instant WhatsApp message for urgent date inquiries and site walk-throughs.
+                  In the live production website, couples and families can directly call the venue reception or start a personalized WhatsApp enquiry.
                 </p>
               </div>
 
-              {/* Verified Phone Numbers */}
+              {/* Demo-Safe Phone CTAs */}
               <div className="space-y-3 pt-2 border-t border-white/10">
-                <a
-                  href={`tel:${VENUE_INFO.phonePrimary}`}
-                  className="flex items-center gap-3 p-3.5 rounded-2xl bg-black/25 hover:bg-black/40 border border-[#C9A96E]/20 hover:border-[#C9A96E]/60 transition"
+                <button
+                  type="button"
+                  onClick={() => openDemoModal("phone")}
+                  className="w-full flex items-center gap-3 p-3.5 rounded-2xl bg-black/25 hover:bg-black/40 border border-[#C9A96E]/20 hover:border-[#C9A96E]/60 transition text-left cursor-pointer"
                 >
                   <div className="w-10 h-10 rounded-xl bg-[#C9A96E] text-[#263D2C] flex items-center justify-center shrink-0">
                     <Phone className="w-5 h-5" />
                   </div>
                   <div>
                     <span className="text-[10px] text-[#F7F0E4]/60 uppercase tracking-wider block">
-                      Primary Helpline
+                      Direct Helpline (Demo)
                     </span>
-                    <span className="font-semibold text-sm sm:text-base text-[#F7F0E4]">
-                      {VENUE_INFO.phonePrimary}
+                    <span className="font-semibold text-sm sm:text-base text-[#F7F0E4] font-mono">
+                      {VENUE_CONFIG.venue.phoneDisplay}
                     </span>
                   </div>
-                </a>
+                </button>
 
-                <a
-                  href={`tel:${VENUE_INFO.phoneSecondary}`}
-                  className="flex items-center gap-3 p-3.5 rounded-2xl bg-black/25 hover:bg-black/40 border border-[#C9A96E]/20 hover:border-[#C9A96E]/60 transition"
-                >
-                  <div className="w-10 h-10 rounded-xl bg-[#87977C] text-[#263D2C] flex items-center justify-center shrink-0">
-                    <Phone className="w-5 h-5 text-[#F7F0E4]" />
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-[#F7F0E4]/60 uppercase tracking-wider block">
-                      Secondary Helpline
-                    </span>
-                    <span className="font-semibold text-sm sm:text-base text-[#F7F0E4]">
-                      {VENUE_INFO.phoneSecondary}
-                    </span>
-                  </div>
-                </a>
-              </div>
-
-              {/* WhatsApp Instant Button */}
-              <div className="pt-2">
-                <a
-                  href={generateWhatsAppLink()}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2.5 w-full py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider shadow-lg transition-all"
+                {/* WhatsApp Demo CTA */}
+                <button
+                  type="button"
+                  onClick={() => openDemoModal("whatsapp")}
+                  className="w-full flex items-center justify-center gap-2.5 py-3.5 rounded-2xl bg-emerald-700/80 hover:bg-emerald-600 text-white font-bold text-xs uppercase tracking-wider shadow-lg transition-all cursor-pointer"
                 >
                   <MessageCircle className="w-4 h-4 fill-current" />
-                  <span>Chat Immediately on WhatsApp</span>
-                </a>
+                  <span>WhatsApp: {VENUE_CONFIG.venue.whatsappDisplay}</span>
+                </button>
               </div>
 
-              {/* Guarantees */}
+              {/* Demo Mode Notice */}
               <div className="pt-4 border-t border-white/10 space-y-2 text-xs text-[#F7F0E4]/75">
-                <div className="flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-[#C9A96E] shrink-0" />
-                  <span>Direct booking without broker or intermediary charges</span>
+                <div className="flex items-start gap-2">
+                  <Info className="w-4 h-4 text-[#C9A96E] shrink-0 mt-0.5" />
+                  <span>
+                    No personal data is collected or transmitted to external services in this concept preview.
+                  </span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>Verified 17,000 sq.ft. lawn & 2,000 sq.ft. AC indoor hall</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-[#C9A96E] shrink-0" />
-                  <span>Complimentary physical site inspection & orientation</span>
+                <div className="flex items-start gap-2">
+                  <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                  <span>
+                    Production release will feature SSL encryption and direct CRM / WhatsApp dispatch.
+                  </span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Right Column: Multi-step Enquiry Form */}
+          {/* Right Column: Sample Enquiry Form */}
           <div className="lg:col-span-7">
             <div className="p-8 sm:p-10 rounded-3xl bg-[#263D2C] border border-[#C9A96E]/30 shadow-2xl">
               {submissionSuccess ? (
-                /* Success Screen */
-                <div className="text-center py-8 space-y-6 animate-in zoom-in-95 duration-300">
+                /* Required Demo Confirmation Screen */
+                <div className="text-center py-6 space-y-6 animate-in zoom-in-95 duration-300">
                   <div className="w-16 h-16 rounded-full bg-emerald-500/20 border-2 border-emerald-400 text-emerald-300 mx-auto flex items-center justify-center">
                     <CheckCircle2 className="w-8 h-8" />
                   </div>
                   <div>
-                    <span className="text-xs font-semibold text-[#C9A96E] uppercase tracking-widest">
-                      Enquiry Reference #{enquiryId}
+                    <span className="text-xs font-semibold text-[#C9A96E] uppercase tracking-widest block mb-2">
+                      Demonstration Completed
                     </span>
-                    <h3 className="font-serif text-3xl font-bold text-[#F7F0E4] mt-1">
-                      Enquiry Submitted Successfully!
+                    <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#F7F0E4] leading-snug">
+                      Form Interaction Verified
                     </h3>
-                    <p className="text-sm text-[#F7F0E4]/80 mt-2 max-w-md mx-auto leading-relaxed">
-                      Thank you! Our management team has recorded your details. To expedite your confirmation, send your details directly via WhatsApp.
+                  </div>
+
+                  {/* Exact Required Notice */}
+                  <div className="p-5 rounded-2xl bg-[#1C2C20] border border-[#C9A96E]/40 text-left max-w-lg mx-auto shadow-inner">
+                    <p className="text-xs sm:text-sm text-[#F7F0E4] leading-relaxed font-sans font-medium">
+                      &ldquo;{VENUE_CONFIG.enquirySuccessNotice}&rdquo;
                     </p>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4">
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
                     <button
-                      onClick={handleWhatsAppRedirect}
-                      className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider shadow-lg transition-all cursor-pointer"
-                    >
-                      <MessageCircle className="w-4 h-4 fill-current" />
-                      <span>Forward Details to WhatsApp</span>
-                    </button>
-                    <button
+                      type="button"
                       onClick={() => {
                         setSubmissionSuccess(false);
                         reset();
                       }}
+                      className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-[#C9A96E] hover:bg-[#D8BD87] text-[#263D2C] font-bold text-xs uppercase tracking-wider shadow-lg transition cursor-pointer"
+                    >
+                      <RotateCcw className="w-4 h-4" />
+                      <span>Test Form Again</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => openDemoModal("whatsapp")}
                       className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-black/30 hover:bg-black/50 text-[#F7F0E4] text-xs font-semibold uppercase tracking-wider transition cursor-pointer"
                     >
-                      Submit Another Query
+                      View WhatsApp Integration Info
                     </button>
                   </div>
                 </div>
               ) : (
-                /* Enquiry Form */
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                  <div>
-                    <h3 className="font-serif text-2xl font-bold text-[#F7F0E4]">
-                      Wedding & Event Enquiry Form
-                    </h3>
-                    <p className="text-xs text-[#F7F0E4]/70 mt-1">
-                      Fill out your celebration details to check availability.
-                    </p>
+                /* Form Inputs */
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+                  <div className="flex items-center justify-between pb-3 border-b border-white/10">
+                    <div>
+                      <span className="text-xs uppercase font-semibold tracking-wider text-[#C9A96E] block">
+                        Interactive Demo Form
+                      </span>
+                      <h3 className="font-serif text-2xl font-bold text-[#F7F0E4]">
+                        {VENUE_CONFIG.enquiryFormLabel}
+                      </h3>
+                    </div>
+                    <span className="text-[10px] uppercase font-bold px-2.5 py-1 rounded-full bg-[#C9A96E]/20 text-[#C9A96E] border border-[#C9A96E]/40">
+                      Safe Preview
+                    </span>
                   </div>
 
                   {/* Name & Phone */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-xs font-semibold text-[#C9A96E] uppercase tracking-wider mb-1.5">
-                        Full Name *
+                        Your Full Name *
                       </label>
                       <div className="relative">
                         <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#C9A96E]/70" />
@@ -324,9 +280,9 @@ export default function EnquirySection({
                           type="text"
                           {...register("name", {
                             required: "Full name is required",
-                            minLength: { value: 2, message: "Name is too short" },
+                            minLength: { value: 2, message: "At least 2 characters" },
                           })}
-                          placeholder="e.g. Ramesh Singh"
+                          placeholder="e.g. Rahul Sharma"
                           className="w-full pl-10 pr-4 py-3 rounded-xl bg-black/25 border border-white/10 focus:border-[#C9A96E] text-[#F7F0E4] text-sm focus:outline-none transition"
                         />
                       </div>
@@ -339,7 +295,7 @@ export default function EnquirySection({
 
                     <div>
                       <label className="block text-xs font-semibold text-[#C9A96E] uppercase tracking-wider mb-1.5">
-                        Phone / WhatsApp *
+                        Mobile Number *
                       </label>
                       <div className="relative">
                         <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#C9A96E]/70" />
@@ -372,7 +328,7 @@ export default function EnquirySection({
                       </label>
                       <select
                         {...register("eventType", { required: true })}
-                        className="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 focus:border-[#C9A96E] text-[#F7F0E4] text-sm focus:outline-none transition"
+                        className="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 focus:border-[#C9A96E] text-[#F7F0E4] text-sm focus:outline-none transition cursor-pointer"
                       >
                         <option value="Wedding (Shaadi)">Wedding (Shaadi)</option>
                         <option value="Wedding Reception">Wedding Reception</option>
@@ -398,17 +354,17 @@ export default function EnquirySection({
                     </div>
                   </div>
 
-                  {/* Expected Guests & Specific Zone Focus */}
+                  {/* Estimated Guests & Specific Zone Focus */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-xs font-semibold text-[#C9A96E] uppercase tracking-wider mb-1.5">
-                        Expected Number of Guests
+                        Estimated Guest Count
                       </label>
                       <div className="relative">
                         <Users className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#C9A96E]/70" />
                         <select
                           {...register("guestCount")}
-                          className="w-full pl-10 pr-4 py-3 rounded-xl bg-black/40 border border-white/10 focus:border-[#C9A96E] text-[#F7F0E4] text-sm focus:outline-none transition"
+                          className="w-full pl-10 pr-4 py-3 rounded-xl bg-black/40 border border-white/10 focus:border-[#C9A96E] text-[#F7F0E4] text-sm focus:outline-none transition cursor-pointer"
                         >
                           <option value="100 - 300 Guests">100 - 300 Guests</option>
                           <option value="300 - 500 Guests">300 - 500 Guests</option>
@@ -420,7 +376,7 @@ export default function EnquirySection({
 
                     <div>
                       <label className="block text-xs font-semibold text-[#C9A96E] uppercase tracking-wider mb-1.5">
-                        Space of Interest
+                        Facilities / Space of Interest
                       </label>
                       <div className="relative">
                         <Building className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#C9A96E]/70" />
@@ -434,10 +390,10 @@ export default function EnquirySection({
                     </div>
                   </div>
 
-                  {/* Required Facilities Multi-select */}
+                  {/* Facilities Checklist */}
                   <div>
                     <label className="block text-xs font-semibold text-[#C9A96E] uppercase tracking-wider mb-2">
-                      Required Venue Facilities
+                      Facilities of Interest
                     </label>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                       {availableFacilities.map((fac) => (
@@ -449,7 +405,7 @@ export default function EnquirySection({
                             type="checkbox"
                             value={fac}
                             {...register("facilities")}
-                            className="rounded border-gray-600 text-[#C9A96E] focus:ring-[#C9A96E] accent-[#C9A96E]"
+                            className="rounded border-gray-600 text-[#C9A96E] focus:ring-[#C9A96E]"
                           />
                           <span className="text-[#F7F0E4]/90">{fac}</span>
                         </label>
@@ -457,42 +413,41 @@ export default function EnquirySection({
                     </div>
                   </div>
 
-                  {/* Additional Message */}
+                  {/* Additional Requirements */}
                   <div>
                     <label className="block text-xs font-semibold text-[#C9A96E] uppercase tracking-wider mb-1.5">
-                      Special Requirements / Message
+                      Additional Requirements / Notes
                     </label>
                     <textarea
                       rows={3}
                       {...register("message")}
-                      placeholder="Share details regarding catering preferences, decoration theme, or preferred site visit times..."
+                      placeholder="Share details regarding catering preferences, stage decor, mandap setup, or room requirements..."
                       className="w-full p-4 rounded-xl bg-black/25 border border-white/10 focus:border-[#C9A96E] text-[#F7F0E4] text-sm focus:outline-none transition resize-none"
                     />
                   </div>
 
                   {/* Submit Button */}
-                  <div className="pt-2">
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="w-full flex items-center justify-center gap-2.5 py-4 rounded-2xl bg-gradient-to-r from-[#DFCA9E] via-[#C9A96E] to-[#B38F52] hover:from-[#EBD9B2] hover:to-[#C49E5D] text-[#263D2C] font-bold text-xs uppercase tracking-wider shadow-xl transition-all duration-300 hover:shadow-[#C9A96E]/30 cursor-pointer disabled:opacity-70"
-                    >
-                      {isSubmitting ? (
-                        <>
-                          <div className="w-4 h-4 border-2 border-[#263D2C] border-t-transparent rounded-full animate-spin" />
-                          <span>Processing Enquiry...</span>
-                        </>
-                      ) : (
-                        <>
-                          <Send className="w-4 h-4 text-[#263D2C]" />
-                          <span>Submit Enquiry & Check Availability</span>
-                        </>
-                      )}
-                    </button>
-                    <p className="text-[11px] text-[#F7F0E4]/60 text-center mt-2.5">
-                      Your enquiry will be acknowledged immediately. We respect your privacy.
-                    </p>
-                  </div>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#DFCA9E] via-[#C9A96E] to-[#B38F52] hover:from-[#EBD9B2] hover:to-[#C49E5D] text-[#263D2C] font-bold text-xs uppercase tracking-wider transition-all duration-200 shadow-xl hover:shadow-2xl flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer hover:-translate-y-0.5"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-[#263D2C] border-t-transparent rounded-full animate-spin" />
+                        <span>Validating Concept Demo...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4" />
+                        <span>Submit Sample Enquiry</span>
+                      </>
+                    )}
+                  </button>
+
+                  <p className="text-center text-[11px] text-[#F7F0E4]/60">
+                    * Concept preview only. No data is stored or transmitted externally.
+                  </p>
                 </form>
               )}
             </div>

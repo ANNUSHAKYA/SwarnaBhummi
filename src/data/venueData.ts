@@ -53,76 +53,33 @@ export interface EventType {
   icon: string;
 }
 
+import { VENUE_CONFIG } from "@/config/venue";
+
 export const VENUE_INFO = {
-  brandName: "SWARNA BHUMMI",
-  descriptor: "MARRIAGE HALL & LAWN",
-  tagline: "Where Every Celebration Becomes a Memory",
-  hindiTagline: "जहाँ हर उत्सव बनता है एक अविस्मरणीय याद",
-  supportingText:
-    "A grand destination for weddings, rituals, and unforgettable celebrations in Jaunpur, Uttar Pradesh.",
-  location: "Rampur (Near Public School), Jaunpur, Uttar Pradesh, India - 222001",
-  landmark: "Near Public School, approximately 4 km from nearby station",
-  city: "Jaunpur",
-  state: "Uttar Pradesh",
-  country: "India",
+  brandName: VENUE_CONFIG.venue.brandName,
+  descriptor: VENUE_CONFIG.venue.descriptor,
+  tagline: VENUE_CONFIG.venue.tagline,
+  hindiTagline: VENUE_CONFIG.venue.hindiTagline,
+  supportingText: VENUE_CONFIG.venue.supportingText,
+  location: VENUE_CONFIG.venue.displayAddress,
+  landmark: VENUE_CONFIG.venue.landmark,
+  city: VENUE_CONFIG.venue.city,
+  state: VENUE_CONFIG.venue.state,
+  country: VENUE_CONFIG.venue.country,
 
-  // Business Contacts extracted directly from venue documentation
-  phonePrimary: "+91 89600 44685",
-  phoneSecondary: "+91 91618 88867",
-  phoneNumbers: ["+91 89600 44685", "+91 91618 88867"],
-  whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "+918960044685",
-  businessEmail: process.env.NEXT_PUBLIC_BUSINESS_EMAIL || "swarnabhummijaunpur@gmail.com",
-  instagramUrl: process.env.NEXT_PUBLIC_INSTAGRAM_URL || "https://www.instagram.com/darkerbelal",
-  instagramHandle: "@DARKERBELAL",
+  // Safe Demo Placeholders (Centralized in src/config/venue.ts)
+  phonePrimary: VENUE_CONFIG.venue.phoneDisplay,
+  phoneSecondary: VENUE_CONFIG.venue.phoneDisplay,
+  phoneNumbers: [VENUE_CONFIG.venue.phoneDisplay],
+  whatsappNumber: VENUE_CONFIG.venue.whatsappDisplay,
+  businessEmail: VENUE_CONFIG.venue.emailDisplay,
+  instagramUrl: "#demo-instagram",
+  instagramHandle: VENUE_CONFIG.venue.instagramHandle,
   googleMapsUrl:
-    "https://www.google.com/maps/search/?api=1&query=Rampur+Jaunpur+Uttar+Pradesh+India",
+    "https://www.google.com/maps/search/?api=1&query=Jaunpur+Uttar+Pradesh+India",
 
-  // Verified Metrics
-  stats: [
-    {
-      label: "Garden Lawn",
-      value: "17,000",
-      unit: "sq. ft.",
-      isVerified: true,
-      description: "Manicured lush open lawn for outdoor celebrations",
-    },
-    {
-      label: "AC Indoor Hall",
-      value: "2,000",
-      unit: "sq. ft.",
-      isVerified: true,
-      description: "Climate-controlled hall with crystal chandeliers",
-    },
-    {
-      label: "Parking Ground",
-      value: "20,000",
-      unit: "sq. ft.",
-      isVerified: true,
-      description: "Spacious private parking with security & lighting",
-    },
-    {
-      label: "Luxury VIP Rooms",
-      value: "9",
-      unit: "Suites",
-      isVerified: true,
-      description: "Air-conditioned rooms with modern fluted paneling",
-    },
-    {
-      label: "Decorated Walkway",
-      value: "180",
-      unit: "feet",
-      isVerified: true,
-      description: "Grand passage with chandeliers & regal draping",
-    },
-    {
-      label: "Celebration Stages",
-      value: "2",
-      unit: "Stages",
-      isVerified: false,
-      unitNote: "Provisional (16×32 & 20×12)",
-      description: "Multi-purpose wedding and reception stage platforms",
-    },
-  ],
+  // Verified & Demo Metrics
+  stats: VENUE_CONFIG.venue.stats,
 };
 
 export const VENUE_ZONES: VenueZone[] = [
@@ -657,8 +614,8 @@ export const TRANSPARENCY_NOTES = {
     "20,000 sq. ft. Dedicated Parking Ground verified with wide access.",
     "9 Luxury VIP AC Rooms with fluted wooden headboards and modern fixtures verified.",
     "180 Ft. Decorated Grand Walkway with chandeliers and silk drapes verified.",
-    "Location: Rampur, near Public School, approximately 4 km from nearby station, Jaunpur district, UP.",
-    "Phone contacts: +91 89600 44685, +91 91618 88867 directly displayed in venue documentation.",
+    "Location: Jaunpur, Uttar Pradesh (concept demonstration; address details awaiting client confirmation).",
+    "Contact channels: Business phone lines and WhatsApp integration will be connected after approval.",
   ],
   provisionalItems: [
     "Stages displayed as 16×32 and 20×12 in video; measurement units (feet/meters) and exact boundaries are provisional pending client site confirmation.",

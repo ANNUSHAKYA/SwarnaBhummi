@@ -9,9 +9,11 @@ import FacilitiesSection from "@/components/home/FacilitiesSection";
 import CelebrationsSection from "@/components/home/CelebrationsSection";
 import GallerySection from "@/components/home/GallerySection";
 import EnquirySection from "@/components/home/EnquirySection";
+import ClientFeedbackSection from "@/components/home/ClientFeedbackSection";
 import LocationSection from "@/components/home/LocationSection";
 import Footer from "@/components/layout/Footer";
 import FloatingWhatsApp from "@/components/ui/FloatingWhatsApp";
+import { DemoModalProvider } from "@/components/ui/DemoNoticeModal";
 
 export default function HomePage() {
   const [selectedFacility, setSelectedFacility] = useState<string>("");
@@ -31,45 +33,50 @@ export default function HomePage() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#F7F0E4] text-[#252720] flex flex-col selection:bg-[#C9A96E]/30 selection:text-[#263D2C]">
-      {/* 1. Sticky Navigation Bar */}
-      <Navbar />
+    <DemoModalProvider>
+      <div className="relative min-h-screen bg-[#F7F0E4] text-[#252720] flex flex-col selection:bg-[#C9A96E]/30 selection:text-[#263D2C]">
+        {/* 1. Fixed Navigation Bar with Concept Announcement Bar */}
+        <Navbar />
 
-      <main className="flex-grow">
-        {/* 2. Cinematic Hero Section */}
-        <HeroSection />
+        <main className="flex-grow">
+          {/* 2. Cinematic Hero Section */}
+          <HeroSection />
 
-        {/* 3. Interactive 3D Venue Explorer Signature Feature */}
-        <VenueExplorer3D onSelectEnquiryZone={handleSelectEnquiryZone} />
+          {/* 3. Interactive 3D Venue Explorer Signature Feature */}
+          <VenueExplorer3D onSelectEnquiryZone={handleSelectEnquiryZone} />
 
-        {/* 4. Venue Highlights & Verified Statistics */}
-        <VenueHighlights />
+          {/* 4. Venue Highlights & Verified Statistics */}
+          <VenueHighlights />
 
-        {/* 5. Venue Facilities Section */}
-        <FacilitiesSection onSelectFacility={handleSelectFacility} />
+          {/* 5. Venue Facilities Section */}
+          <FacilitiesSection onSelectFacility={handleSelectFacility} />
 
-        {/* 6. Wedding Celebrations & Events Storytelling */}
-        <CelebrationsSection onSelectEventType={handleSelectEventType} />
+          {/* 6. Wedding Celebrations & Events Storytelling */}
+          <CelebrationsSection onSelectEventType={handleSelectEventType} />
 
-        {/* 7. Wedding Gallery & Venue Storytelling */}
-        <GallerySection />
+          {/* 7. Wedding Gallery & Venue Storytelling */}
+          <GallerySection />
 
-        {/* 8. Enquiry & Venue Visit Form ("Plan Your Wedding") */}
-        <EnquirySection
-          initialFacility={selectedFacility}
-          initialZone={selectedZone}
-          initialEventType={selectedEventType}
-        />
+          {/* 8. Enquiry Form ("Sample Enquiry — Demo Only") */}
+          <EnquirySection
+            initialFacility={selectedFacility}
+            initialZone={selectedZone}
+            initialEventType={selectedEventType}
+          />
 
-        {/* 9. Location & Accessibility Section */}
-        <LocationSection />
-      </main>
+          {/* 9. Location & Accessibility Section */}
+          <LocationSection />
 
-      {/* 10. Contact Details & Footer */}
-      <Footer />
+          {/* 10. Professional Client Feedback CTA ("Imagine Your Venue, Reimagined.") */}
+          <ClientFeedbackSection />
+        </main>
 
-      {/* 11. Floating WhatsApp Button */}
-      <FloatingWhatsApp />
-    </div>
+        {/* 11. Contact Details & Footer with DEMO PREVIEW badge */}
+        <Footer />
+
+        {/* 12. Floating WhatsApp Demo Button */}
+        <FloatingWhatsApp />
+      </div>
+    </DemoModalProvider>
   );
 }

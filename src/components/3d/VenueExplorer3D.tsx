@@ -164,9 +164,10 @@ export default function VenueExplorer3D({
           <p className="mt-3 text-sm sm:text-base text-[#F7F0E4]/80 leading-relaxed">
             Navigate our 17,000 sq. ft. starlit garden lawn, 2,000 sq. ft. indoor banquet hall, 180 ft. royal entrance passage, and celebration stages in an interactive architectural preview.
           </p>
-          <p className="text-xs text-[#C9A96E]/80 mt-2 italic">
-            * 3D spatial layout is an illustrative concept guided by venue footage. Click any marker to view verified details.
-          </p>
+          <div className="mt-3 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#263D2C]/90 border border-[#C9A96E]/30 text-xs text-[#C9A96E] font-medium">
+            <Sparkles className="w-3.5 h-3.5 shrink-0" />
+            <span>Interactive concept model — final venue layout subject to site-plan confirmation.</span>
+          </div>
         </div>
 
         {/* 3D Explorer Interactive Canvas Container */}
@@ -365,6 +366,17 @@ export default function VenueExplorer3D({
               onEnquireZone={handleEnquireFromZone}
             />
           </div>
+        </div>
+
+        {/* Discreet 3D Explorer Caption */}
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-2 px-2 text-xs text-[#F7F0E4]/70">
+          <span className="flex items-center gap-1.5 text-[#C9A96E] font-medium">
+            <Sparkles className="w-3.5 h-3.5" />
+            Interactive concept model — final venue layout subject to site-plan confirmation.
+          </span>
+          <span className="text-[11px] text-[#F7F0E4]/50">
+            Rotate with mouse/touch • Click gold markers to preview zone capacities
+          </span>
         </div>
 
         {/* Selected Zone Detail Modal / Bottom Drawer */}

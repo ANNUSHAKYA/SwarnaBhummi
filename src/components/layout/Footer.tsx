@@ -2,20 +2,22 @@
 
 import React from "react";
 import Link from "next/link";
-import { VENUE_INFO } from "@/data/venueData";
-import { generateWhatsAppLink } from "@/utils/whatsapp";
+import { VENUE_CONFIG } from "@/config/venue";
+import { useDemoModal } from "@/components/ui/DemoNoticeModal";
 import {
   Phone,
   Mail,
   MapPin,
   MessageCircle,
-  ShieldCheck,
   Compass,
   ArrowUp,
-  Heart,
+  Sparkles,
+  Info,
 } from "lucide-react";
 
 export default function Footer() {
+  const { openDemoModal } = useDemoModal();
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -32,30 +34,30 @@ export default function Footer() {
               </div>
               <div>
                 <span className="font-serif font-bold text-xl tracking-wider text-[#F7F0E4] block leading-tight">
-                  {VENUE_INFO.brandName}
+                  {VENUE_CONFIG.venue.brandName}
                 </span>
                 <span className="text-[10px] font-sans font-medium uppercase tracking-widest text-[#C9A96E]">
-                  {VENUE_INFO.descriptor}
+                  {VENUE_CONFIG.venue.descriptor}
                 </span>
               </div>
             </div>
 
             <p className="font-serif italic text-[#EADBCA] text-sm leading-relaxed">
-              &ldquo;{VENUE_INFO.tagline}&rdquo;
+              &ldquo;{VENUE_CONFIG.venue.tagline}&rdquo;
             </p>
 
             <p className="text-xs text-[#F7F0E4]/70 leading-relaxed font-light">
-              Premier wedding lawn and luxury marriage hall in Rampur, Jaunpur. Featuring 17,000 sq.ft. garden lawn, 2,000 sq.ft. AC indoor hall, 9 VIP suites, and 20,000 sq.ft. parking grounds.
+              Premier wedding lawn and luxury marriage hall concept for Jaunpur. Featuring 17,000 sq.ft. garden lawn, 2,000 sq.ft. AC indoor hall, 9 VIP suites, and 20,000 sq.ft. parking grounds.
             </p>
 
-            {/* Social Icons */}
+            {/* Social / Direct Channels (Demo-Safe) */}
             <div className="flex items-center gap-3 pt-2">
-              <a
-                href={VENUE_INFO.instagramUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-9 h-9 rounded-xl bg-[#263D2C] border border-[#C9A96E]/30 flex items-center justify-center text-[#F7F0E4] hover:text-[#C9A96E] hover:border-[#C9A96E] transition"
-                title={`Visit Instagram: ${VENUE_INFO.instagramHandle}`}
+              <button
+                type="button"
+                onClick={() => openDemoModal("instagram")}
+                className="w-9 h-9 rounded-xl bg-[#263D2C] border border-[#C9A96E]/30 flex items-center justify-center text-[#F7F0E4] hover:text-[#C9A96E] hover:border-[#C9A96E] transition cursor-pointer"
+                title={`Instagram handle: ${VENUE_CONFIG.venue.instagramHandle} (Click for demo status)`}
+                aria-label="Instagram Demo Channel"
               >
                 <svg
                   className="w-4 h-4 fill-none stroke-current"
@@ -68,16 +70,19 @@ export default function Footer() {
                   <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
                   <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
                 </svg>
-              </a>
-              <a
-                href={generateWhatsAppLink()}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-9 h-9 rounded-xl bg-emerald-950 border border-emerald-500/40 flex items-center justify-center text-emerald-300 hover:text-white transition"
-                title="Chat on WhatsApp"
+              </button>
+              <button
+                type="button"
+                onClick={() => openDemoModal("whatsapp")}
+                className="w-9 h-9 rounded-xl bg-emerald-950 border border-emerald-500/40 flex items-center justify-center text-emerald-300 hover:text-white transition cursor-pointer"
+                title="WhatsApp Concept (Click for demo notice)"
+                aria-label="WhatsApp Demo Channel"
               >
                 <MessageCircle className="w-4 h-4" />
-              </a>
+              </button>
+              <span className="text-[11px] text-[#C9A96E]/80 font-mono">
+                {VENUE_CONFIG.venue.instagramHandle}
+              </span>
             </div>
           </div>
 
@@ -156,12 +161,12 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#C9A96E]" />
-                <span>2 Celebration Stages (16×32 & 20×12)</span>
+                <span>2 Celebration Stages (Details to be confirmed)</span>
               </li>
             </ul>
           </div>
 
-          {/* Direct Contacts & Address */}
+          {/* Direct Contacts & Address (Demo Placeholders) */}
           <div className="lg:col-span-3 space-y-3">
             <h4 className="font-serif font-bold text-sm text-[#C9A96E] uppercase tracking-wider">
               Contact & Bookings
@@ -169,34 +174,37 @@ export default function Footer() {
             <div className="space-y-2.5 text-xs text-[#F7F0E4]/80">
               <div className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-[#C9A96E] shrink-0 mt-0.5" />
-                <span>{VENUE_INFO.location}</span>
+                <span>{VENUE_CONFIG.venue.displayAddress}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-[#C9A96E] shrink-0" />
-                <a
-                  href={`tel:${VENUE_INFO.phonePrimary}`}
-                  className="hover:text-[#C9A96E] transition font-medium"
+                <button
+                  type="button"
+                  onClick={() => openDemoModal("phone")}
+                  className="hover:text-[#C9A96E] transition font-medium cursor-pointer text-left font-mono"
                 >
-                  {VENUE_INFO.phonePrimary}
-                </a>
+                  Phone: {VENUE_CONFIG.venue.phoneDisplay}
+                </button>
               </div>
               <div className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-[#C9A96E] shrink-0" />
-                <a
-                  href={`tel:${VENUE_INFO.phoneSecondary}`}
-                  className="hover:text-[#C9A96E] transition font-medium"
+                <MessageCircle className="w-4 h-4 text-emerald-400 shrink-0" />
+                <button
+                  type="button"
+                  onClick={() => openDemoModal("whatsapp")}
+                  className="hover:text-emerald-300 transition font-medium cursor-pointer text-left"
                 >
-                  {VENUE_INFO.phoneSecondary}
-                </a>
+                  WhatsApp: {VENUE_CONFIG.venue.whatsappDisplay}
+                </button>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-[#C9A96E] shrink-0" />
-                <a
-                  href={`mailto:${VENUE_INFO.businessEmail}`}
-                  className="hover:text-[#C9A96E] transition"
+                <button
+                  type="button"
+                  onClick={() => openDemoModal("email")}
+                  className="hover:text-[#C9A96E] transition cursor-pointer text-left font-mono"
                 >
-                  {VENUE_INFO.businessEmail}
-                </a>
+                  {VENUE_CONFIG.venue.emailDisplay}
+                </button>
               </div>
             </div>
 
@@ -205,26 +213,34 @@ export default function Footer() {
                 href="#enquiry-section"
                 className="inline-flex items-center justify-center w-full py-2.5 rounded-xl bg-[#C9A96E] hover:bg-[#DBC08B] text-[#263D2C] font-bold text-xs uppercase tracking-wider transition shadow"
               >
-                Reserve Your Date
+                Sample Enquiry Form
               </Link>
             </div>
           </div>
         </div>
 
-        {/* Bottom Bar & Disclaimer */}
+        {/* Bottom Bar with Unobtrusive DEMO PREVIEW Label */}
         <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[#F7F0E4]/60">
-          <p className="text-center md:text-left">
-            © 2026 {VENUE_INFO.brandName} Marriage Hall & Lawn, Jaunpur. All Rights Reserved.
-          </p>
+          <div className="flex items-center gap-3 flex-wrap justify-center md:justify-start">
+            <p>
+              © 2026 {VENUE_CONFIG.venue.brandName} Marriage Hall & Lawn. Concept Preview.
+            </p>
+            {/* Unobtrusive DEMO PREVIEW Label as requested in Item 1 */}
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#263D2C] text-[#C9A96E] border border-[#C9A96E]/40 font-mono text-[10px] font-bold uppercase tracking-widest shadow-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#C9A96E] animate-pulse" />
+              {VENUE_CONFIG.demoFooterBadgeText}
+            </span>
+          </div>
 
-          <p className="text-[11px] text-center md:text-right max-w-md">
-            Architectural 3D model represents an illustrative concept guided by on-site video footage. Verified specifications are certified from documented venue signage.
+          <p className="text-[11px] text-center md:text-right max-w-md text-[#F7F0E4]/70">
+            {VENUE_CONFIG.modelDisclaimer}
           </p>
 
           <button
             onClick={scrollToTop}
             className="p-2.5 rounded-xl bg-[#263D2C] border border-[#C9A96E]/30 text-[#C9A96E] hover:bg-[#C9A96E] hover:text-[#263D2C] transition cursor-pointer shrink-0"
             title="Scroll to Top"
+            aria-label="Scroll to Top"
           >
             <ArrowUp className="w-4 h-4" />
           </button>

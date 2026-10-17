@@ -1,4 +1,4 @@
-import { VENUE_INFO } from "@/data/venueData";
+import { VENUE_CONFIG } from "@/config/venue";
 
 export interface WhatsAppInquiryPayload {
   name?: string;
@@ -12,49 +12,15 @@ export interface WhatsAppInquiryPayload {
 }
 
 /**
- * Builds a formatted, URL-encoded WhatsApp click-to-chat link
+ * Builds a formatted WhatsApp enquiry text draft for production use.
+ * In demo mode, external wa.me links are disabled to prevent fake number calls.
  */
-export function generateWhatsAppLink(payload?: WhatsAppInquiryPayload): string {
-  const rawNumber = VENUE_INFO.whatsappNumber.replace(/[^0-9]/g, "");
-  
-  if (!payload) {
-    const defaultMsg = `Namaste! I would like to inquire about booking Swarna Bhummi Marriage Hall & Lawn, Jaunpur for an upcoming event. Please share availability and packages.`;
-    return `https://wa.me/${rawNumber}?text=${encodeURIComponent(defaultMsg)}`;
+export function generateWhatsAppLink(_payload?: WhatsAppInquiryPayload): string {
+  // In demo mode, do not generate clickable WhatsApp links with fake numbers
+  if (VENUE_CONFIG.isDemoMode) {
+    return "#demo-whatsapp";
   }
 
-  const lines: string[] = [
-    `✨ *Enquiry for Swarna Bhummi Marriage Hall & Lawn, Jaunpur* ✨`,
-    ``,
-  ];
-
-  if (payload.name) {
-    lines.push(`👤 *Name:* ${payload.name}`);
-  }
-  if (payload.phone) {
-    lines.push(`📞 *Contact:* ${payload.phone}`);
-  }
-  if (payload.eventType) {
-    lines.push(`🎉 *Event Type:* ${payload.eventType}`);
-  }
-  if (payload.eventDate) {
-    lines.push(`📅 *Preferred Date:* ${payload.eventDate}`);
-  }
-  if (payload.guestCount) {
-    lines.push(`👥 *Estimated Guests:* ${payload.guestCount}`);
-  }
-  if (payload.specificZone) {
-    lines.push(`📍 *Specific Space of Interest:* ${payload.specificZone}`);
-  }
-  if (payload.facilities && payload.facilities.length > 0) {
-    lines.push(`🏛️ *Required Facilities:* ${payload.facilities.join(", ")}`);
-  }
-  if (payload.message) {
-    lines.push(`💬 *Additional Notes:* ${payload.message}`);
-  }
-
-  lines.push(``);
-  lines.push(`Please let me know the availability and share details for a venue visit.`);
-
-  const text = encodeURIComponent(lines.join("\n"));
-  return `https://wa.me/${rawNumber}?text=${text}`;
+  const rawNumber = VENUE_CONFIG.venue.whatsappDisplay.replace(/[^0-9]/g, "");
+  return `https://wa.me/${rawNumber}`;
 }

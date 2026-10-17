@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { VENUE_INFO } from "@/data/venueData";
-import { generateWhatsAppLink } from "@/utils/whatsapp";
+import { useDemoModal } from "@/components/ui/DemoNoticeModal";
+import DemoBanner from "./DemoBanner";
 import {
   Menu,
   X,
@@ -17,6 +18,7 @@ import {
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { openDemoModal } = useDemoModal();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -34,16 +36,20 @@ export default function Navbar() {
     { label: "Celebrations", href: "#celebrations" },
     { label: "Gallery", href: "#gallery" },
     { label: "Location", href: "#location" },
-    { label: "Contact", href: "#contact" },
+    { label: "Sample Enquiry", href: "#enquiry-section" },
   ];
 
   return (
-    <>
-      <header
-        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+    <header className="fixed top-0 left-0 right-0 z-40">
+      {/* 1. Tasteful Concept Preview Announcement Bar */}
+      <DemoBanner />
+
+      {/* 2. Main Navigation Bar */}
+      <div
+        className={`w-full transition-all duration-300 ${
           isScrolled
-            ? "bg-[#263D2C]/95 backdrop-blur-md shadow-xl py-3 border-b border-[#C9A96E]/20"
-            : "bg-gradient-to-b from-[#1C2C20]/90 to-transparent py-5"
+            ? "bg-[#263D2C]/95 backdrop-blur-md shadow-xl py-2.5 border-b border-[#C9A96E]/20"
+            : "bg-gradient-to-b from-[#1C2C20]/95 via-[#1C2C20]/80 to-transparent py-3.5"
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -71,7 +77,7 @@ export default function Navbar() {
             </Link>
 
             {/* Desktop Navigation Links */}
-            <nav className="hidden xl:flex items-center gap-6">
+            <nav className="hidden xl:flex items-center gap-5">
               {navLinks.map((link) => (
                 <Link
                   key={link.label}
@@ -88,37 +94,37 @@ export default function Navbar() {
               ))}
             </nav>
 
-            {/* Desktop Action Buttons */}
-            <div className="hidden md:flex items-center gap-3">
-              {/* Direct Phone Call */}
-              <a
-                href={`tel:${VENUE_INFO.phonePrimary}`}
-                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold text-[#F7F0E4] hover:text-[#C9A96E] transition border border-[#C9A96E]/20 hover:border-[#C9A96E]/50 bg-black/20"
-                title="Call Venue Reception"
+            {/* Desktop Action Buttons (Demo-Safe) */}
+            <div className="hidden md:flex items-center gap-2.5">
+              {/* Phone Button -> Triggers Demo Notice Modal */}
+              <button
+                type="button"
+                onClick={() => openDemoModal("phone")}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-[#F7F0E4] hover:text-[#C9A96E] transition border border-[#C9A96E]/20 hover:border-[#C9A96E]/50 bg-black/20 cursor-pointer"
+                title="Business contact details will be added after approval"
               >
                 <Phone className="w-3.5 h-3.5 text-[#C9A96E]" />
-                <span>{VENUE_INFO.phonePrimary}</span>
-              </a>
+                <span className="font-mono">{VENUE_INFO.phonePrimary}</span>
+              </button>
 
-              {/* WhatsApp Quick Chat */}
-              <a
-                href={generateWhatsAppLink()}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-emerald-300 hover:text-emerald-200 transition border border-emerald-500/30 hover:border-emerald-500/60 bg-emerald-950/40"
-                title="Chat on WhatsApp"
+              {/* WhatsApp Button -> Triggers Demo Notice Modal */}
+              <button
+                type="button"
+                onClick={() => openDemoModal("whatsapp")}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-emerald-300 hover:text-emerald-200 transition border border-emerald-500/30 hover:border-emerald-500/60 bg-emerald-950/40 cursor-pointer"
+                title="WhatsApp integration will be connected after approval"
               >
                 <MessageCircle className="w-3.5 h-3.5 text-emerald-400" />
-                <span className="hidden lg:inline">WhatsApp</span>
-              </a>
+                <span className="hidden lg:inline">WhatsApp Demo</span>
+              </button>
 
-              {/* Primary Plan Your Wedding CTA */}
+              {/* Primary Demo Enquiry CTA */}
               <Link
                 href="#enquiry-section"
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#DFCA9E] via-[#C9A96E] to-[#B38F52] hover:from-[#EBD9B2] hover:to-[#C49E5D] text-[#263D2C] font-bold text-xs uppercase tracking-wider shadow-md hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5 cursor-pointer"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#DFCA9E] via-[#C9A96E] to-[#B38F52] hover:from-[#EBD9B2] hover:to-[#C49E5D] text-[#263D2C] font-bold text-xs uppercase tracking-wider shadow-md hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5 cursor-pointer"
               >
                 <Calendar className="w-3.5 h-3.5 text-[#263D2C]" />
-                <span>Plan Your Wedding</span>
+                <span>Sample Enquiry</span>
               </Link>
             </div>
 
@@ -128,7 +134,7 @@ export default function Navbar() {
                 href="#enquiry-section"
                 className="px-3 py-1.5 rounded-lg bg-[#C9A96E] text-[#263D2C] font-bold text-[11px] uppercase tracking-wider sm:hidden"
               >
-                Enquire
+                Sample Enquiry
               </Link>
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -144,57 +150,65 @@ export default function Navbar() {
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Mobile Slide-down Drawer */}
-        {isMobileMenuOpen && (
-          <div className="xl:hidden bg-[#263D2C]/98 backdrop-blur-xl border-b border-[#C9A96E]/30 shadow-2xl px-6 py-6 animate-in slide-in-from-top duration-300">
-            <div className="flex flex-col space-y-4">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={`text-sm font-semibold tracking-wide py-2 border-b border-white/5 flex items-center justify-between ${
-                    link.highlight
-                      ? "text-[#C9A96E] font-bold"
-                      : "text-[#F7F0E4]/90 hover:text-[#C9A96E]"
-                  }`}
-                >
-                  <span>{link.label}</span>
-                  {link.highlight && <Sparkles className="w-4 h-4 text-[#C9A96E]" />}
-                </Link>
-              ))}
+      {/* Mobile Slide-down Drawer */}
+      {isMobileMenuOpen && (
+        <div className="xl:hidden bg-[#263D2C]/98 backdrop-blur-xl border-b border-[#C9A96E]/30 shadow-2xl px-6 py-6 animate-in slide-in-from-top duration-300">
+          <div className="flex flex-col space-y-3.5">
+            {navLinks.map((link) => (
+              <Link
+                key={link.label}
+                href={link.href}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={`text-sm font-semibold tracking-wide py-2 border-b border-white/5 flex items-center justify-between ${
+                  link.highlight
+                    ? "text-[#C9A96E] font-bold"
+                    : "text-[#F7F0E4]/90 hover:text-[#C9A96E]"
+                }`}
+              >
+                <span>{link.label}</span>
+                {link.highlight && <Sparkles className="w-4 h-4 text-[#C9A96E]" />}
+              </Link>
+            ))}
 
-              <div className="pt-4 flex flex-col gap-3">
-                <a
-                  href={`tel:${VENUE_INFO.phonePrimary}`}
-                  className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-black/30 border border-[#C9A96E]/30 text-xs font-semibold text-[#F7F0E4]"
-                >
-                  <Phone className="w-4 h-4 text-[#C9A96E]" />
-                  <span>Call: {VENUE_INFO.phonePrimary}</span>
-                </a>
-                <a
-                  href={generateWhatsAppLink()}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-emerald-900/40 border border-emerald-500/40 text-xs font-semibold text-emerald-300"
-                >
-                  <MessageCircle className="w-4 h-4 text-emerald-400" />
-                  <span>Chat on WhatsApp</span>
-                </a>
-                <Link
-                  href="#enquiry-section"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-gradient-to-r from-[#DFCA9E] via-[#C9A96E] to-[#B38F52] text-[#263D2C] font-bold text-xs uppercase tracking-wider shadow"
-                >
-                  <Calendar className="w-4 h-4" />
-                  <span>Check Availability & Book</span>
-                </Link>
-              </div>
+            <div className="pt-3 flex flex-col gap-2.5">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  openDemoModal("phone");
+                }}
+                className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-black/30 border border-[#C9A96E]/30 text-xs font-semibold text-[#F7F0E4]"
+              >
+                <Phone className="w-4 h-4 text-[#C9A96E]" />
+                <span>Call: {VENUE_INFO.phonePrimary} (Demo Only)</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  openDemoModal("whatsapp");
+                }}
+                className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-emerald-900/40 border border-emerald-500/40 text-xs font-semibold text-emerald-300"
+              >
+                <MessageCircle className="w-4 h-4 text-emerald-400" />
+                <span>WhatsApp: Demo enquiry only</span>
+              </button>
+
+              <Link
+                href="#enquiry-section"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-gradient-to-r from-[#DFCA9E] via-[#C9A96E] to-[#B38F52] text-[#263D2C] font-bold text-xs uppercase tracking-wider shadow"
+              >
+                <Calendar className="w-4 h-4" />
+                <span>Sample Enquiry — Demo Only</span>
+              </Link>
             </div>
           </div>
-        )}
-      </header>
-    </>
+        </div>
+      )}
+    </header>
   );
 }
